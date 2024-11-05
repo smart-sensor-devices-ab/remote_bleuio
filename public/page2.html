@@ -38,8 +38,7 @@
     <script>
       const socket = io();
 
-      // Replace 'your_password' with your actual password
-      const correctPassword = 'bleuio321!';
+      const correctPassword = 'bleuio321'; // Replace with your chosen password
 
       function checkPassword() {
         const enteredPassword = document.getElementById('passwordInput').value;
@@ -53,7 +52,7 @@
 
       function sendCommand() {
         const command = document.getElementById('commandInput').value;
-        socket.emit('sendCommand', command); // Send command to server
+        socket.emit('sendCommand', command);
       }
 
       socket.on('serialResponse', (data) => {
