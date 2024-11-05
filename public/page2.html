@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page 2 - Send Command</title>
+    <style>
+      #response {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-top: 20px;
+      }
+      #content {
+        display: none; /* Hide content initially */
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Access Protected</h1>
+    <div id="passwordPrompt">
+      <p>Enter password to access:</p>
+      <input type="password" id="passwordInput" placeholder="Password" />
+      <button onclick="checkPassword()">Submit</button>
+    </div>
+
+    <div id="content">
+      <h1>Send Command to Serial Port</h1>
+      <input type="text" id="commandInput" placeholder="Enter command" />
+      <button onclick="sendCommand()">Send Command</button>
+
+      <h2>Response from Serial Port</h2>
+      <div id="response">Waiting for response...</div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      // Replace 'your_password' with your actual password
+      const correctPassword = 'bleuio321!';
+
+      function checkPassword() {
+        const enteredPassword = document.getElementById('passwordInput').value;
+        if (enteredPassword === correctPassword) {
+          document.getElementById('passwordPrompt').style.display = 'none';
+          document.getElementById('content').style.display = 'block';
+        } else {
+          alert('Incorrect password. Please try again.');
+        }
+      }
+
+      function sendCommand() {
+        const command = document.getElementById('commandInput').value;
+        socket.emit('sendCommand', command); // Send command to server
+      }
+
+      socket.on('serialResponse', (data) => {
+        const formattedData = data.replace(/\n/g, '<br>');
+        const responseDiv = document.getElementById('response');
+        responseDiv.innerHTML += `${formattedData}<br>`;
+        responseDiv.scrollTop = responseDiv.scrollHeight;
+      });
+    </script>
+  </body>
+</html>
